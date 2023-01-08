@@ -1,0 +1,22 @@
+// Set the ticker symbol and time frame
+symbol = 'ETH/USD'
+time_frame = '4h'
+
+// Load the price data
+price_data = security(symbol, time_frame, [close, high, low])
+
+// Calculate the indicators
+rsi = rsi(price_data, 14)
+stoch = stoch(high, low, close, 14)
+macd = macd(close, 12, 26)
+
+// Start the main loop
+strategy("Indicator Combo", overlay=true)
+
+if (rsi > 70 && stoch.k > 80 && macd.macd > 0)
+    strategy.entry("Long", strategy.long)
+else if (rsi < 30 && stoch.k < 20 && macd.macd < 0)
+    strategy.entry("Short", strategy.short)
+else
+    strategy.close("Long")
+    strategy.close("Short")
